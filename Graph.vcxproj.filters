@@ -23,6 +23,12 @@
     <ClInclude Include="MyForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="numerical_methods_lab2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="numerical_methods.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MyForm.resx">
