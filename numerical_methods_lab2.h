@@ -24,7 +24,9 @@
 
 
 
+
 const  double  PI_4 = atan(1);
+const double PI = PI_4 * 4;
 // Функции для тестовой задачи
 double  q1Test(double x) {
     return PI_4 ;
@@ -45,6 +47,8 @@ double f2Test(double x) {
     return sqrt(2)/2;
 }
 
+
+
 // Функции для основной задачи
 double q1(double x) {
     return x;
@@ -64,7 +68,28 @@ double f1(double x) {
 double f2(double x) {
     return sin(x);
 }
-
+// Функции аналитического решения
+double u1(double x) {
+    return (-0.081647581300341) * exp(sqrt(PI)*x/2 ) + (-0.191591963434822) * exp(-sqrt(PI) * x / 2) + (4/PI);
+}
+double u2(double x) {
+    return (-0.077992823107226) * exp(PI/(4*sqrt(2))*x) + (-0.01814096667774) * exp(-PI / (4 * sqrt(2)) * x) + (8*sqrt(2)/(PI*PI));
+}
+   
+TResults analyticalRes(std::function<double(double)> u1, std::function<double(double)> u2, double ksi,int n) {
+    double h = 1.0 / n;
+    TResults res;
+    double x = 0;
+    res.res_vec.push_back({ 0,1 });
+    for (int i = 0; i < n; i++) {
+        x += h;
+        if (x <= ksi)
+            res.res_vec.push_back({ x,u1(x) });
+        else
+            res.res_vec.push_back({ x,u2(x) });
+    }
+    return res;
+}
 
 void straightRun(const  std::vector <double>& longDiag, const  std::vector <double>& shortDiagUp, const  std::vector <double>& shortDiagDown, const  std::vector<double>& answer, std::vector<double>& alphas, std::vector <double>& betas) {
     alphas.push_back(-shortDiagUp.at(0) / longDiag.at(0));

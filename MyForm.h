@@ -104,20 +104,6 @@ namespace Graph {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	protected:
 	private: System::ComponentModel::IContainer^  components;
 
@@ -412,17 +398,30 @@ namespace Graph {
 
 		// Число разбиений
 		int n = Convert::ToInt64(textBox1->Text);
-		std::string text;
+		String^ text();
 		if (TestRadioButton->Checked) {
 			TResults res = tfunc(0, 1, n, PI_4, k1Test, k2Test, q1Test, q2Test, f1Test, f2Test);
+			TResults res2 = analyticalRes(u1, u2, PI_4, n);
+			double max = 0;
+			double max_x = 0;
 			for (size_t i = 0; i < res.res_vec.size(); i++) {
 				f1_list->Add(res.res_vec[i].first, res.res_vec[i].second);
-
+				f2_list->Add(res2.res_vec[i].first, res2.res_vec[i].second);
 				dataGridView1->Rows->Add();
 				dataGridView1->Rows[i]->Cells[0]->Value = i;
 				dataGridView1->Rows[i]->Cells[1]->Value = res.res_vec[i].first;
 				dataGridView1->Rows[i]->Cells[2]->Value = res.res_vec[i].second;
+				dataGridView1->Rows[i]->Cells[3]->Value = res2.res_vec[i].second;
+				dataGridView1->Rows[i]->Cells[4]->Value = (res2.res_vec[i].second- res.res_vec[i].second);
+				double sub = (res2.res_vec[i].second - res.res_vec[i].second);
+				f3_list->Add(res.res_vec[i].first, sub);
+				if (abs(sub > max)) {
+					max = abs(sub);
+					max_x = res.res_vec[i].first;
+				}
 			}
+			textBox5->Text = Convert::ToString(max);
+			textBox2->Text = Convert::ToString(max_x);
 		}
 		else {
 			double sub;
@@ -451,15 +450,14 @@ namespace Graph {
 				dataGridView1->Rows[i]->Cells[3]->Value = res2h.res_vec[2*i].second;
 				dataGridView1->Rows[i]->Cells[4]->Value = sub;
 			}
-			text = text + "Для решения задачи использована равноверная сетка с числом разбиений n = " + std::to_string(n) + "; задача должна быть решена с точностью e = 0.5.10^-6; задача решена с точностью e2 = "+ std::to_string(max);
+			MessageBox::Show("Для решения задачи использована равноверная сетка с числом разбиений n = " + n + "; задача должна быть решена с точностью e = 0.5.10^-6; задача решена с точностью e2 ="+max+"; максимальная разность численных решений наблюдается в точке x = " + max_x);
 			textBox5->Text = Convert::ToString(max);
 			textBox2->Text = Convert::ToString(max_x);
-
 		}
-		MessageBox::Show(text);
-		LineItem Curve3 = panel2->AddCurve("V ( x )", f3_list, Color::Red, SymbolType::None);
-		LineItem Curve1 = panel->AddCurve("V ( x )", f1_list, Color::Red, SymbolType::None);
-		LineItem Curve2 = panel->AddCurve("V2 ( x )", f2_list, Color::Blue, SymbolType::None);
+		
+		LineItem^ Curve3 = panel2->AddCurve("V ( x )", f3_list, Color::Red, SymbolType::None);
+		LineItem^ Curve1 = panel->AddCurve("V ( x )", f1_list, Color::Red, SymbolType::None);
+		LineItem^ Curve2 = panel->AddCurve("V2 ( x )", f2_list, Color::Blue, SymbolType::None);
 		
 
 
